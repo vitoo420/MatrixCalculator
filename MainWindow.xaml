@@ -5,7 +5,8 @@
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 Title="MainWindow"
+                 xmlns:viewmodel="clr-namespace:MatrixCalculator"
+                 Title="Matrix Calculator"
                  Width="1231.2"
                  Height="713.49"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
@@ -29,9 +30,21 @@
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
 
-    <StackPanel Name="stackpanel">
+    <!--<StackPanel Name="stackpanel">
         <mah:ToggleSwitch Header="Tmavý režim"
                     Toggled="ToggleSwitch_Toggled" HorizontalAlignment="Right" VerticalAlignment="Top" Width="154" Height="54" Grid.Column="6"/>
-    </StackPanel>
-        
+    </StackPanel>-->
+    <Canvas x:Name="canvas">
+        <ComboBox Canvas.Left="98" Canvas.Top="10" Width="40" Name="m1NumOfRowInput" SelectionChanged="m1NumOfRowInput_SelectionChanged" >
+            <ComboBoxItem>1</ComboBoxItem>
+            <ComboBoxItem>2</ComboBoxItem>
+            <ComboBoxItem IsSelected="True">3</ComboBoxItem>
+        </ComboBox>
+        <ComboBox Canvas.Left="175" Canvas.Top="10" Width="40" Name="m1NumOfColInput" SelectionChanged="m1NumOfColInput_SelectionChanged" >
+            <ComboBoxItem>1</ComboBoxItem>
+            <ComboBoxItem>2</ComboBoxItem>
+            <ComboBoxItem IsSelected="True">3</ComboBoxItem>
+        </ComboBox>
+    </Canvas>
+
 </mah:MetroWindow>

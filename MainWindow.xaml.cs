@@ -21,25 +21,49 @@ namespace MatrixCalculator
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private Matrix a = new Matrix(50, 50);
+
         public MainWindow()
         {
             InitializeComponent();
-            CreateATextBox();
         }
 
-
-
-        private void CreateATextBox()
+        private void m1NumOfRowInput_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            TextBox txtb = new TextBox();
+            //Pri inicializaci jeste neni nastavena default hodnota, proto je nutne otestovat a pripadne zustane default hodnota tridy Matrix (3),
+            //pri zmene je vhodne zmenit i IsSelected item ComboBoxu
+            if (((ComboBoxItem)m1NumOfRowInput.SelectedItem).Content != null) a.NumOfRows = Convert.ToInt32(((ComboBoxItem)m1NumOfRowInput.SelectedItem).Content);
 
-            txtb.Height = 50;
-            txtb.Width = 50;
-            txtb.Text = "Text Box content";
-            txtb.Background = new SolidColorBrush(Colors.Orange);
-            txtb.Foreground = new SolidColorBrush(Colors.Black);
-            this.stackpanel.Children.Add(txtb);
+            //Pokud existuje pole textboxu tak je odstraneno
+            if (a.TextBoxMatrix != null)
+            {
+                foreach (var item in a.TextBoxMatrix)
+                {
+                    this.canvas.Children.Remove(item);
+                }
+            }
+
+            a.CreateTextBoxMatrix(this.canvas);
         }
+
+        private void m1NumOfColInput_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Pri inicializaci jeste neni nastavena default hodnota, proto je nutne otestovat a pripadne zustane default hodnota tridy Matrix (3),
+            //pri zmene je vhodne zmenit i IsSelected item ComboBoxu
+            if (((ComboBoxItem)m1NumOfColInput.SelectedItem).Content != null) a.NumOfColumns = Convert.ToInt32(((ComboBoxItem)m1NumOfColInput.SelectedItem).Content);
+
+            //Pokud existuje pole textboxu tak je odstraneno
+            if (a.TextBoxMatrix != null)
+            {
+                foreach (var item in a.TextBoxMatrix)
+                {
+                    this.canvas.Children.Remove(item);
+                }
+            }
+
+            a.CreateTextBoxMatrix(this.canvas);
+        }
+
         private void LaunchGitHubSite(object sender, RoutedEventArgs e)
         {
             // Launch the GitHub site...
@@ -57,7 +81,7 @@ namespace MatrixCalculator
             {
                 if (toggleSwitch.IsOn == true)
                 {
-                   
+
                 }
             }
         }

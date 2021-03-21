@@ -3,14 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace MatrixCalculator
 {
     class Matrix
     {
+        public int NumOfRows { get; set; } = 3;
+        public int NumOfColumns { get; set; } = 3;
+        public TextBox[,] TextBoxMatrix { get; set; }
         public double[,] MatrixData { get; set; }
 
-        public Matrix(double[,] MatrixData)
+        public int TextBoxMatXPos { get; set; }
+        public int TextBoxMatYPos { get; set; }
+
+        const int TextBoxHeight = 50;
+        const int TextBoxWidth = 100;
+        const int spaceBetween = 10; 
+
+        public Matrix(int xPos, int yPos)
+        {
+            TextBoxMatXPos = xPos;
+            TextBoxMatYPos = yPos;
+        }
+
+        public Matrix(double[,] MatrixData)     //Pouze pro "zpetnou kompatibilitu" - potom smazat
         {
             this.MatrixData = MatrixData;
         }
@@ -172,6 +190,63 @@ namespace MatrixCalculator
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="canvas">Kreslici plocha</param>
+        /// <param name="x">X souradnice</param>
+        /// <param name="y">Y souradnice</param>
+        /// <returns>TextBox objekt</returns>
+        private TextBox CreateATextBox(Canvas canvas, int x, int y)
+        {
+            TextBox txtb = new TextBox();
+
+            //v matematice i v c# multidim. polich se prvni pise radek, potom sloupec
+
+            txtb.Height = TextBoxHeight;
+            txtb.Width = TextBoxWidth;
+            txtb.FontSize = 20;
+
+            //txtb.Background = new SolidColorBrush(Colors.Orange);
+            txtb.Foreground = new SolidColorBrush(Colors.Black);
+            
+            canvas.Children.Add(txtb);
+
+            Canvas.SetLeft(txtb, x);
+            Canvas.SetTop(txtb, y);
+
+            return txtb;
+        }
+
+        /// <summary>
+        /// Vytvori pole TextBoxu reprezentujici matici, pozice je cerpana z vlastnosti objektu
+        /// </summary>
+        /// <param name="canvas">Kreslici plocha</param>
+        public void CreateTextBoxMatrix(Canvas canvas)
+        {
+            TextBoxMatrix = new TextBox[NumOfRows, NumOfColumns];
+            int tempX = TextBoxMatXPos;
+            int tempY = TextBoxMatYPos;
+            
+            for (int i = 0; i < NumOfRows; i++)
+            {
+                for (int j = 0; j < NumOfColumns; j++)
+                {
+                    TextBoxMatrix[i, j] = CreateATextBox(canvas, tempX, tempY);
+
+                    if (j == NumOfColumns - 1)
+                    {
+                        tempX -= (NumOfColumns - 1) * TextBoxWidth + (NumOfColumns -1) * spaceBetween;
+                        tempY += TextBoxHeight + spaceBetween;
+                    }    
+                    else
+                    {
+                        tempX += TextBoxWidth + spaceBetween;
+                    }      
+                }
+            }    
+        }
+
         public override string ToString()
         {
             string result = "";
@@ -187,4 +262,5 @@ namespace MatrixCalculator
             return result;
         }
     }
+
 }
