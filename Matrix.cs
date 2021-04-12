@@ -5,27 +5,43 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Windows.UI.Xaml;
 
 namespace MatrixCalculator
 {
     class Matrix
     {
-        public int NumOfRows { get; set; } = 3;
-        public int NumOfColumns { get; set; } = 3;
+        private int _numOfRows;
+        public int NumOfRows
+        {
+            get { return _numOfRows; }
+            set
+            {
+                _numOfRows = value;
+                if (_numOfRows == 0)
+                    _numOfRows = 3;
+            }
+        }
+        private int _numOfColumns;
+        public int NumOfColumns
+        {
+            get { return _numOfColumns; }
+            set
+            {
+                _numOfColumns = value;
+                if (_numOfColumns == 0)
+                    _numOfColumns = 3;
+            }
+        }
         public TextBox[,] TextBoxMatrix { get; set; }
         public double[,] MatrixData { get; set; }
+        public Roles Role { get; set; }
 
-        public int TextBoxMatXPos { get; set; }
-        public int TextBoxMatYPos { get; set; }
-
-        const int TextBoxHeight = 50;
-        const int TextBoxWidth = 100;
-        const int spaceBetween = 10; 
-
-        public Matrix(int xPos, int yPos)
+        public Matrix(Roles role)
         {
-            TextBoxMatXPos = xPos;
-            TextBoxMatYPos = yPos;
+            Role = role;
+            NumOfRows = 3;
+            NumOfColumns = 3;
         }
 
         public Matrix(double[,] MatrixData)     //Pouze pro "zpetnou kompatibilitu" - potom smazat
@@ -193,58 +209,86 @@ namespace MatrixCalculator
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="canvas">Kreslici plocha</param>
-        /// <param name="x">X souradnice</param>
-        /// <param name="y">Y souradnice</param>
+        /// <param name="grid">Sub Grid matice</param>
+        /// <param name="row">radek v Sub Gridu</param>
+        /// <param name="col">sloupec v Sub Gridu</param>
         /// <returns>TextBox objekt</returns>
-        private TextBox CreateATextBox(Canvas canvas, int x, int y)
+        private TextBox CreateATextBox(Grid grid, int row, int col)
         {
             TextBox txtb = new TextBox();
-
-            //v matematice i v c# multidim. polich se prvni pise radek, potom sloupec
-
-            txtb.Height = TextBoxHeight;
-            txtb.Width = TextBoxWidth;
-            txtb.FontSize = 20;
-
-            //txtb.Background = new SolidColorBrush(Colors.Orange);
+            grid.Children.Add(txtb);
+            Grid.SetRow(txtb, row);
+            Grid.SetColumn(txtb, col);
             txtb.Foreground = new SolidColorBrush(Colors.Black);
-            
-            canvas.Children.Add(txtb);
-
-            Canvas.SetLeft(txtb, x);
-            Canvas.SetTop(txtb, y);
-
             return txtb;
         }
 
         /// <summary>
-        /// Vytvori pole TextBoxu reprezentujici matici, pozice je cerpana z vlastnosti objektu
+        /// Vytvori pole TextBoxu reprezentujici matici, TextBoxy jsou umisteny do gridu, ktery je urceny pro matici.
         /// </summary>
-        /// <param name="canvas">Kreslici plocha</param>
-        public void CreateTextBoxMatrix(Canvas canvas)
+        /// <param name="grid">Sub Grid matice</param>
+        public void CreateTextBoxMatrix(Grid grid)
         {
-            TextBoxMatrix = new TextBox[NumOfRows, NumOfColumns];
-            int tempX = TextBoxMatXPos;
-            int tempY = TextBoxMatYPos;
-            
-            for (int i = 0; i < NumOfRows; i++)
-            {
-                for (int j = 0; j < NumOfColumns; j++)
-                {
-                    TextBoxMatrix[i, j] = CreateATextBox(canvas, tempX, tempY);
+            int iPlus = 0;
 
-                    if (j == NumOfColumns - 1)
+            switch (NumOfRows)
+            {
+                case 1:
+                    iPlus = 2;
+                    break;
+                case 2:
+                    iPlus = 1;
+                    break;
+                case 3:
+                    iPlus = 1;
+                    break;
+                case 4:
+                    iPlus = 0;
+                    break;
+                case 5:
+                    iPlus = 0;
+                    break;
+                default:
+                    break;
+            }
+
+            //v matematice i v c# multidim. polich se prvni pise radek, potom sloupec
+            TextBoxMatrix = new TextBox[NumOfRows, NumOfColumns];
+
+            switch (Role)
+            {
+                case Roles.First:
+                    for (int i = 0; i < NumOfRows; i++)
                     {
-                        tempX -= (NumOfColumns - 1) * TextBoxWidth + (NumOfColumns -1) * spaceBetween;
-                        tempY += TextBoxHeight + spaceBetween;
-                    }    
-                    else
+                        for (int j = 0; j < NumOfColumns; j++)
+                        {
+                            TextBoxMatrix[i, j] = CreateATextBox(grid, i + iPlus, j + (5 - NumOfColumns));
+                        }
+                    }
+                    break;
+                case Roles.Second:
+                    for (int i = 0; i < NumOfRows; i++)
                     {
-                        tempX += TextBoxWidth + spaceBetween;
-                    }      
-                }
-            }    
+                        for (int j = 0; j < NumOfColumns; j++)
+                        {
+                            TextBoxMatrix[i, j] = CreateATextBox(grid, i + iPlus, j);
+                        }
+                    }
+                    break;
+                case Roles.Result:
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        public static void DeleteMatrix(Matrix matrix, Grid grid)
+        {
+            foreach (var item in matrix.TextBoxMatrix)
+            {
+                grid.Children.Remove(item);
+            }
         }
 
         public override string ToString()

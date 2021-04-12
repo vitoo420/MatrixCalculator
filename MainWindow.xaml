@@ -7,12 +7,13 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:viewmodel="clr-namespace:MatrixCalculator"
                  Title="Matrix Calculator"
-                 Width="1231.2"
-                 Height="713.49"
+                 Width="1230"
+                 Height="650"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                  ResizeMode="CanResizeWithGrip"
                  WindowStartupLocation="CenterScreen"
-                 mc:Ignorable="d">
+                 mc:Ignorable="d"
+                 Name="Window">
 
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
@@ -34,17 +35,109 @@
         <mah:ToggleSwitch Header="Tmavý režim"
                     Toggled="ToggleSwitch_Toggled" HorizontalAlignment="Right" VerticalAlignment="Top" Width="154" Height="54" Grid.Column="6"/>
     </StackPanel>-->
-    <Canvas x:Name="canvas">
-        <ComboBox Canvas.Left="98" Canvas.Top="10" Width="40" Name="m1NumOfRowInput" SelectionChanged="m1NumOfRowInput_SelectionChanged" >
-            <ComboBoxItem>1</ComboBoxItem>
-            <ComboBoxItem>2</ComboBoxItem>
-            <ComboBoxItem IsSelected="True">3</ComboBoxItem>
-        </ComboBox>
-        <ComboBox Canvas.Left="175" Canvas.Top="10" Width="40" Name="m1NumOfColInput" SelectionChanged="m1NumOfColInput_SelectionChanged" >
-            <ComboBoxItem>1</ComboBoxItem>
-            <ComboBoxItem>2</ComboBoxItem>
-            <ComboBoxItem IsSelected="True">3</ComboBoxItem>
-        </ComboBox>
-    </Canvas>
+    <Grid x:Name="mainGrid" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="1.5*"/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="m1Grid" Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+
+        <Grid x:Name="m2Grid" Grid.Row="1" Grid.Column="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+
+        <Canvas x:Name="canvas">
+
+        </Canvas>
+
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m1NumOfRowInput" SelectionChanged="m1DimensionChanged" >
+                <ComboBoxItem>1</ComboBoxItem>
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem>5</ComboBoxItem>
+            </ComboBox>
+            
+            <Label VerticalAlignment="Bottom" FontSize="25">x</Label>
+            
+            <ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m1NumOfColInput" SelectionChanged="m1DimensionChanged" >
+                <ComboBoxItem>1</ComboBoxItem>
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem>5</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
+            <ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m2NumOfRowInput" SelectionChanged="m2DimensionChanged">
+                <ComboBoxItem>1</ComboBoxItem>
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem>5</ComboBoxItem>
+            </ComboBox>
+
+            <Label VerticalAlignment="Bottom" FontSize="25">x</Label>
+
+            <ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m2NumOfColInput" SelectionChanged="m2DimensionChanged">
+                <ComboBoxItem>1</ComboBoxItem>
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem IsSelected="True">3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem>5</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <RadioButton GroupName="operations" Margin="10">+</RadioButton>
+            <RadioButton GroupName="operations" Margin="10">-</RadioButton>
+            <RadioButton GroupName="operations" Margin="10">*</RadioButton>
+            <RadioButton GroupName="operations" Margin="10">Δ</RadioButton>
+        </StackPanel>
+
+        <Button Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FontSize="30">=</Button>
+        
+    </Grid>
 
 </mah:MetroWindow>
