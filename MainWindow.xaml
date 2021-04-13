@@ -15,25 +15,6 @@
                  WindowStartupLocation="CenterScreen"
                  mc:Ignorable="d"
                  Name="Window">
-    <!--<Window.Resources>
-        <x:Array x:Key="Dimensions" Type="ComboBoxItem">
-            <ComboBoxItem>
-                1
-            </ComboBoxItem>
-            <ComboBoxItem>
-                2
-            </ComboBoxItem>
-            <ComboBoxItem>
-                3
-            </ComboBoxItem>
-            <ComboBoxItem>
-                4
-            </ComboBoxItem>
-            <ComboBoxItem>
-                5
-            </ComboBoxItem>
-        </x:Array>
-    </Window.Resources>-->
 
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>

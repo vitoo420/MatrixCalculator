@@ -10,4 +10,9 @@ namespace MatrixCalculator
     {
         First, Second, Result
     }
+
+    enum Operations    
+    {
+        add, subtract, multiply, determinant
+    }
 }
