@@ -237,14 +237,10 @@ namespace MatrixCalculator
                     iPlus = 2;
                     break;
                 case 2:
-                    iPlus = 1;
-                    break;
                 case 3:
                     iPlus = 1;
                     break;
                 case 4:
-                    iPlus = 0;
-                    break;
                 case 5:
                     iPlus = 0;
                     break;
@@ -257,6 +253,7 @@ namespace MatrixCalculator
 
             switch (Role)
             {
+                case Roles.Result:
                 case Roles.First:
                     for (int i = 0; i < NumOfRows; i++)
                     {
@@ -274,8 +271,6 @@ namespace MatrixCalculator
                             TextBoxMatrix[i, j] = CreateATextBox(grid, i + iPlus, j);
                         }
                     }
-                    break;
-                case Roles.Result:
                     break;
                 default:
                     break;

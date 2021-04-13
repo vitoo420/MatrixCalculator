@@ -6,6 +6,7 @@
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:viewmodel="clr-namespace:MatrixCalculator"
+                 xmlns:sys="clr-namespace:System;assembly=mscorlib"
                  Title="Matrix Calculator"
                  Width="1230"
                  Height="650"
@@ -14,6 +15,25 @@
                  WindowStartupLocation="CenterScreen"
                  mc:Ignorable="d"
                  Name="Window">
+    <!--<Window.Resources>
+        <x:Array x:Key="Dimensions" Type="ComboBoxItem">
+            <ComboBoxItem>
+                1
+            </ComboBoxItem>
+            <ComboBoxItem>
+                2
+            </ComboBoxItem>
+            <ComboBoxItem>
+                3
+            </ComboBoxItem>
+            <ComboBoxItem>
+                4
+            </ComboBoxItem>
+            <ComboBoxItem>
+                5
+            </ComboBoxItem>
+        </x:Array>
+    </Window.Resources>-->
 
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
@@ -90,27 +110,50 @@
         </Canvas>
 
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m1NumOfRowInput" SelectionChanged="m1DimensionChanged" >
+            <!--<ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m1NumOfRowInput" SelectionChanged="m1DimensionChanged" >
                 <ComboBoxItem>1</ComboBoxItem>
                 <ComboBoxItem>2</ComboBoxItem>
                 <ComboBoxItem IsSelected="True">3</ComboBoxItem>
                 <ComboBoxItem>4</ComboBoxItem>
                 <ComboBoxItem>5</ComboBoxItem>
             </ComboBox>
-            
+
             <Label VerticalAlignment="Bottom" FontSize="25">x</Label>
-            
+
             <ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m1NumOfColInput" SelectionChanged="m1DimensionChanged" >
                 <ComboBoxItem>1</ComboBoxItem>
                 <ComboBoxItem>2</ComboBoxItem>
                 <ComboBoxItem IsSelected="True">3</ComboBoxItem>
                 <ComboBoxItem>4</ComboBoxItem>
                 <ComboBoxItem>5</ComboBoxItem>
-            </ComboBox>
+            </ComboBox>-->
+            <mah:NumericUpDown 
+                VerticalAlignment="Bottom" 
+                Width="40" 
+                Margin="0,0,0,5" 
+                Name="m1NumOfRowInput" 
+                NumericInputMode="Numbers"
+                Minimum="1" 
+                Maximum="5" 
+                Value="3" 
+                ValueChanged="m1DimensionChanged"
+            />
+            <Label VerticalAlignment="Bottom" FontSize="25">x</Label>
+            <mah:NumericUpDown 
+                VerticalAlignment="Bottom" 
+                Width="40" 
+                Margin="0,0,0,5" 
+                Name="m1NumOfColInput" 
+                NumericInputMode="Numbers"
+                Minimum="1" 
+                Maximum="5" 
+                Value="3" 
+                ValueChanged="m1DimensionChanged"
+            />
         </StackPanel>
 
         <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
-            <ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m2NumOfRowInput" SelectionChanged="m2DimensionChanged">
+            <!--<ComboBox VerticalAlignment="Bottom" Width="40" Margin="0,0,0,5" Name="m2NumOfRowInput" SelectionChanged="m2DimensionChanged">
                 <ComboBoxItem>1</ComboBoxItem>
                 <ComboBoxItem>2</ComboBoxItem>
                 <ComboBoxItem IsSelected="True">3</ComboBoxItem>
@@ -126,18 +169,45 @@
                 <ComboBoxItem IsSelected="True">3</ComboBoxItem>
                 <ComboBoxItem>4</ComboBoxItem>
                 <ComboBoxItem>5</ComboBoxItem>
-            </ComboBox>
+            </ComboBox>-->
+
+            <mah:NumericUpDown 
+                VerticalAlignment="Bottom" 
+                Width="40" 
+                Margin="0,0,0,5" 
+                Name="m2NumOfRowInput" 
+                NumericInputMode="Numbers"
+                Minimum="1" 
+                Maximum="5" 
+                Value="3" 
+                ValueChanged="m2DimensionChanged"
+            />
+            
+            <Label VerticalAlignment="Bottom" FontSize="25">x</Label>
+            
+            <mah:NumericUpDown 
+                VerticalAlignment="Bottom" 
+                Width="40" Margin="0,0,0,5" 
+                Name="m2NumOfColInput" 
+                NumericInputMode="Numbers"
+                Minimum="1" 
+                Maximum="5" 
+                Value="3" 
+                ValueChanged="m2DimensionChanged"
+            />
+
+
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <RadioButton GroupName="operations" Margin="10">+</RadioButton>
-            <RadioButton GroupName="operations" Margin="10">-</RadioButton>
-            <RadioButton GroupName="operations" Margin="10">*</RadioButton>
-            <RadioButton GroupName="operations" Margin="10">Δ</RadioButton>
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" Name="add" IsChecked="True">+</RadioButton>
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" Name="subtract">-</RadioButton>
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" Name="multiply">*</RadioButton>
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" Name="determinant">Δ</RadioButton>
         </StackPanel>
 
         <Button Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FontSize="30">=</Button>
-        
+
     </Grid>
 
 </mah:MetroWindow>
