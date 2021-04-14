@@ -11,7 +11,7 @@ namespace MatrixCalculator
         First, Second, Result
     }
 
-    enum Operations    
+    public enum MatrixOperations    
     {
         add, subtract, multiply, determinant
     }

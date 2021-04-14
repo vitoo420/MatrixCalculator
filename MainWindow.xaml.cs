@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,37 +25,16 @@ namespace MatrixCalculator
         private Matrix a = new Matrix(Roles.First);
         private Matrix b = new Matrix(Roles.Second);
         private Matrix c;
-        private Operations Operation;
+        private MatrixOperations Operation;
 
         public MainWindow()
         {
             InitializeComponent();
+
             //this.mainGrid.ShowGridLines = true;
             //this.m1Grid.ShowGridLines = true;
             //this.m2Grid.ShowGridLines = true;
-        }
 
-
-        private void LaunchGitHubSite(object sender, RoutedEventArgs e)
-        {
-            // Launch the GitHub site...
-        }
-
-        private void DeployCupCakes(object sender, RoutedEventArgs e)
-        {
-            // deploy some CupCakes...
-        }
-
-        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            if (toggleSwitch != null)
-            {
-                if (toggleSwitch.IsOn == true)
-                {
-
-                }
-            }
         }
 
         private void OperationChanged(object sender, RoutedEventArgs e)
@@ -62,20 +42,27 @@ namespace MatrixCalculator
             switch ((sender as RadioButton).Name)
             {
                 case "add":
-                    Operation = Operations.add;
+                    Operation = MatrixOperations.add;
+                    m2NumOfColInput.IsEnabled = false;
+                    m2NumOfRowInput.IsEnabled = false;
                     break;
                 case "subtract":
-                    Operation = Operations.subtract;
+                    Operation = MatrixOperations.subtract;
+                    m2NumOfColInput.IsEnabled = false;
+                    m2NumOfRowInput.IsEnabled = false;
                     break;
                 case "multiply":
-                    Operation = Operations.multiply;
+                    Operation = MatrixOperations.multiply;
+                    m2NumOfColInput.IsEnabled = true;
+                    m2NumOfRowInput.IsEnabled = false;
                     break;
                 case "determinant":
-                    Operation = Operations.determinant;
+                    Operation = MatrixOperations.determinant;
                     break;
                 default:
                     break;
             }
+            CheckDimensions();
         }
         private void m1DimensionChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
@@ -87,6 +74,7 @@ namespace MatrixCalculator
                 Matrix.DeleteMatrix(a, m1Grid);
 
             a.CreateTextBoxMatrix(m1Grid);
+            CheckDimensions();
         }
 
         private void m2DimensionChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
@@ -99,6 +87,51 @@ namespace MatrixCalculator
                 Matrix.DeleteMatrix(b, m2Grid);
 
             b.CreateTextBoxMatrix(m2Grid);
+        }
+
+        //Separatni metoda pro kontrolu rozmeru, aby se zamezilo vadnym rozmerum pri prepinani operaci
+        private void CheckDimensions()
+        {
+            switch (Operation)
+            {
+                case MatrixOperations.add:
+                case MatrixOperations.subtract:
+                    if (m2NumOfColInput != null)
+                        m2NumOfColInput.Value = m1NumOfColInput.Value;
+                    if (m2NumOfRowInput != null)
+                        m2NumOfRowInput.Value = m1NumOfRowInput.Value;
+                    break;
+
+                case MatrixOperations.multiply:
+                    m2NumOfRowInput.Value = m1NumOfColInput.Value;
+                    break;
+                case MatrixOperations.determinant:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void LaunchGitHubSite(object sender, RoutedEventArgs e)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "https://github.com/vitoo420/MatrixCalculator",
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+        }
+
+        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
+            if (toggleSwitch != null)
+            {
+                if (toggleSwitch.IsOn == true)
+                {
+
+                }
+            }
         }
     }
 }
