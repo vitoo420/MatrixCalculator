@@ -43,21 +43,45 @@ namespace MatrixCalculator
             {
                 case "add":
                     Operation = MatrixOperations.add;
+                    m1NumOfColInput.IsEnabled = true;
                     m2NumOfColInput.IsEnabled = false;
                     m2NumOfRowInput.IsEnabled = false;
+                    b.TextBoxMatrixIsEnabled(m2Grid, true);
                     break;
                 case "subtract":
                     Operation = MatrixOperations.subtract;
+                    m1NumOfColInput.IsEnabled = true;
                     m2NumOfColInput.IsEnabled = false;
                     m2NumOfRowInput.IsEnabled = false;
+                    b.TextBoxMatrixIsEnabled(m2Grid, true);
                     break;
                 case "multiply":
                     Operation = MatrixOperations.multiply;
+                    m1NumOfColInput.IsEnabled = true;
                     m2NumOfColInput.IsEnabled = true;
                     m2NumOfRowInput.IsEnabled = false;
+                    b.TextBoxMatrixIsEnabled(m2Grid, true);
                     break;
                 case "determinant":
                     Operation = MatrixOperations.determinant;
+                    m1NumOfColInput.IsEnabled = false;
+                    m2NumOfColInput.IsEnabled = false;
+                    m2NumOfRowInput.IsEnabled = false;
+                    b.TextBoxMatrixIsEnabled(m2Grid, false);
+                    break;
+                case "inverse":
+                    Operation = MatrixOperations.inverse;
+                    m1NumOfColInput.IsEnabled = false;
+                    m2NumOfColInput.IsEnabled = false;
+                    m2NumOfRowInput.IsEnabled = false;
+                    b.TextBoxMatrixIsEnabled(m2Grid, false);
+                    break;
+                case "transpose":
+                    Operation = MatrixOperations.transpose;
+                    m1NumOfColInput.IsEnabled = true;
+                    m2NumOfColInput.IsEnabled = false;
+                    m2NumOfRowInput.IsEnabled = false;
+                    b.TextBoxMatrixIsEnabled(m2Grid, false);
                     break;
                 default:
                     break;
@@ -106,6 +130,12 @@ namespace MatrixCalculator
                     m2NumOfRowInput.Value = m1NumOfColInput.Value;
                     break;
                 case MatrixOperations.determinant:
+                    m1NumOfColInput.Value = m1NumOfRowInput.Value;
+                    break;
+                case MatrixOperations.inverse:
+                    m1NumOfColInput.Value = m1NumOfRowInput.Value;
+                    break;
+                case MatrixOperations.transpose:
                     break;
                 default:
                     break;

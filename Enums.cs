@@ -13,6 +13,6 @@ namespace MatrixCalculator
 
     public enum MatrixOperations    
     {
-        add, subtract, multiply, determinant
+        add, subtract, multiply, determinant, inverse, transpose
     }
 }

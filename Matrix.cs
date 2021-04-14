@@ -104,6 +104,15 @@ namespace MatrixCalculator
 
         }
 
+        public void TextBoxMatrixIsEnabled(Grid grid, bool isEnabled)
+        {
+            bool _isEnabled = isEnabled;
+            foreach (var item in this.TextBoxMatrix)
+            {
+                item.IsEnabled = _isEnabled;
+            }
+        }
+
         public static void DeleteMatrix(Matrix matrix, Grid grid)
         {
             foreach (var item in matrix.TextBoxMatrix)
