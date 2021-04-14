@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using ControlzEx.Theming;
 
 namespace MatrixCalculator
 {
@@ -158,9 +159,9 @@ namespace MatrixCalculator
             if (toggleSwitch != null)
             {
                 if (toggleSwitch.IsOn == true)
-                {
-
-                }
+                    ThemeManager.Current.ChangeTheme(this, "Dark.Steel");
+                else
+                    ThemeManager.Current.ChangeTheme(this, "Light.Blue");
             }
         }
     }
