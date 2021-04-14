@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using ControlzEx.Theming;
+using System.Text.RegularExpressions;
 
 namespace MatrixCalculator
 {
@@ -27,7 +28,8 @@ namespace MatrixCalculator
         private Matrix b = new Matrix(Roles.Second);
         private Matrix c;
         private MatrixOperations Operation;
-
+        
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -98,7 +100,7 @@ namespace MatrixCalculator
             if (a.TextBoxMatrix != null)
                 Matrix.DeleteMatrix(a, m1Grid);
 
-            a.CreateTextBoxMatrix(m1Grid);
+            a.CreateTextBoxMatrix(m1Grid, this);
             CheckDimensions();
         }
 
@@ -111,7 +113,7 @@ namespace MatrixCalculator
             if (b.TextBoxMatrix != null)
                 Matrix.DeleteMatrix(b, m2Grid);
 
-            b.CreateTextBoxMatrix(m2Grid);
+            b.CreateTextBoxMatrix(m2Grid, this);
         }
 
         //Separatni metoda pro kontrolu rozmeru, aby se zamezilo vadnym rozmerum pri prepinani operaci
@@ -164,5 +166,17 @@ namespace MatrixCalculator
                     ThemeManager.Current.ChangeTheme(this, "Light.Blue");
             }
         }
+
+        private void solve_Click(object sender, RoutedEventArgs e)
+        {
+            Matrix.Solve(Operation, a, b);
+        }
+
+        public void ValidateTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
     }
 }

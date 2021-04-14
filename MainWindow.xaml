@@ -15,7 +15,7 @@
                  ResizeMode="CanResizeWithGrip"
                  WindowStartupLocation="CenterScreen"
                  mc:Ignorable="d"
-                 Name="Window">
+                 x:Name="Window">
 
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
@@ -83,39 +83,39 @@
             </Grid.RowDefinitions>
         </Grid>
 
-        
+
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
 
-            <RadioButton VerticalAlignment="Bottom" Margin="0,0,10,10" GroupName="operations" Name="transpose" Checked="OperationChanged">tran</RadioButton>
-            <RadioButton VerticalAlignment="Bottom" Margin="0,0,10,10" GroupName="operations" Name="inverse" Checked="OperationChanged">inv</RadioButton>
-            <RadioButton VerticalAlignment="Bottom" Margin="0,0,10,10" GroupName="operations" Name="determinant" Checked="OperationChanged">Δ</RadioButton>
-            
+            <RadioButton VerticalAlignment="Bottom" Margin="0,0,10,10" GroupName="operations" x:Name="transpose" Checked="OperationChanged">tran</RadioButton>
+            <RadioButton VerticalAlignment="Bottom" Margin="0,0,10,10" GroupName="operations" x:Name="inverse" Checked="OperationChanged">inv</RadioButton>
+            <RadioButton VerticalAlignment="Bottom" Margin="0,0,10,10" GroupName="operations" x:Name="determinant" Checked="OperationChanged">Δ</RadioButton>
+
             <mah:NumericUpDown 
                 VerticalAlignment="Bottom" 
                 Width="40" 
                 Margin="0,0,0,5" 
-                Name="m1NumOfRowInput" 
+                x:Name="m1NumOfRowInput" 
                 NumericInputMode="Numbers"
                 Minimum="1" 
                 Maximum="5" 
                 Value="3" 
                 ValueChanged="m1DimensionChanged"
             />
-            
+
             <Label VerticalAlignment="Bottom" FontSize="25">x</Label>
-            
+
             <mah:NumericUpDown 
                 VerticalAlignment="Bottom" 
                 Width="40" 
                 Margin="0,0,0,5" 
-                Name="m1NumOfColInput" 
+                x:Name="m1NumOfColInput" 
                 NumericInputMode="Numbers"
                 Minimum="1" 
                 Maximum="5" 
                 Value="3" 
                 ValueChanged="m1DimensionChanged"
             />
-            
+
         </StackPanel>
 
         <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
@@ -124,7 +124,7 @@
                 VerticalAlignment="Bottom" 
                 Width="40" 
                 Margin="0,0,0,5" 
-                Name="m2NumOfRowInput" 
+                x:Name="m2NumOfRowInput" 
                 NumericInputMode="Numbers"
                 Minimum="1" 
                 Maximum="5" 
@@ -132,13 +132,13 @@
                 ValueChanged="m2DimensionChanged"
                 IsEnabled="False"
             />
-            
+
             <Label VerticalAlignment="Bottom" FontSize="25">x</Label>
-            
+
             <mah:NumericUpDown 
                 VerticalAlignment="Bottom" 
                 Width="40" Margin="0,0,0,5" 
-                Name="m2NumOfColInput" 
+                x:Name="m2NumOfColInput" 
                 NumericInputMode="Numbers"
                 Minimum="1" 
                 Maximum="5" 
@@ -150,13 +150,20 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" Name="add" IsChecked="True">+</RadioButton>
-            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" Name="subtract">-</RadioButton>
-            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" Name="multiply">*</RadioButton>
-            <!--<RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" Name="determinant">Δ</RadioButton>-->
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" x:Name="add" IsChecked="True">+</RadioButton>
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" x:Name="subtract">-</RadioButton>
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" x:Name="multiply">*</RadioButton>
         </StackPanel>
 
-        <Button Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FontSize="30">=</Button>
+        <Button 
+            Grid.Row="1" 
+            Grid.Column="4" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center" 
+            Width="50" 
+            FontSize="30"
+            x:Name="solve"
+            Click="solve_Click">=</Button>
 
         <mah:ToggleSwitch 
             Grid.Column="5"

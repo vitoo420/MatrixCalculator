@@ -52,13 +52,14 @@ namespace MatrixCalculator
         /// <param name="row">radek v Sub Gridu</param>
         /// <param name="col">sloupec v Sub Gridu</param>
         /// <returns>TextBox objekt</returns>
-        private TextBox CreateATextBox(Grid grid, int row, int col)
+        private TextBox CreateATextBox(Grid grid, int row, int col, MatrixCalculator.MainWindow window)
         {
             TextBox txtb = new TextBox();
             grid.Children.Add(txtb);
             Grid.SetRow(txtb, row);
             Grid.SetColumn(txtb, col);
-            txtb.Foreground = new SolidColorBrush(Colors.Black);
+            //txtb.AddHandler(TextBox.PreviewTextInputEvent, validator);
+            txtb.PreviewTextInput += new System.Windows.Input.TextCompositionEventHandler(window.ValidateTextBox);
             return txtb;
         }
 
@@ -66,7 +67,7 @@ namespace MatrixCalculator
         /// Vytvori pole TextBoxu reprezentujici matici, TextBoxy jsou umisteny do gridu, ktery je urceny pro matici.
         /// </summary>
         /// <param name="grid">Sub Grid matice</param>
-        public void CreateTextBoxMatrix(Grid grid)
+        public void CreateTextBoxMatrix(Grid grid, MatrixCalculator.MainWindow window)
         {
             int iPlus = 0;                                  //Nastaveni pozicovacich promennych 
             int jPlus = 0;
@@ -98,7 +99,7 @@ namespace MatrixCalculator
             {
                 for (int j = 0; j < NumOfColumns; j++)
                 {
-                    TextBoxMatrix[i, j] = CreateATextBox(grid, i + iPlus, j + jPlus);
+                    TextBoxMatrix[i, j] = CreateATextBox(grid, i + iPlus, j + jPlus, window);
                 }
             }
 
@@ -118,6 +119,43 @@ namespace MatrixCalculator
             foreach (var item in matrix.TextBoxMatrix)
             {
                 grid.Children.Remove(item);
+            }
+        }
+
+        private void TextBoxArrayToDoubleArray()
+        {
+            this.MatrixData = new double[NumOfRows, NumOfColumns];
+            for (int i = 0; i < NumOfRows; i++)
+            {
+                for (int j = 0; j < NumOfColumns; j++)
+                {
+                    Double.TryParse(this.TextBoxMatrix[i, j].Text, out this.MatrixData[i, j]);
+                    this.TextBoxMatrix[i, j].Text = (this.MatrixData[i, j]).ToString();
+                }
+            }
+        }
+
+        //Bude vracet objekt Matrix
+        public static void Solve(MatrixOperations operation, Matrix a, Matrix b)
+        {
+            a.TextBoxArrayToDoubleArray();
+            b.TextBoxArrayToDoubleArray();
+            switch (operation)
+            {
+                case MatrixOperations.add:
+                    break;
+                case MatrixOperations.subtract:
+                    break;
+                case MatrixOperations.multiply:
+                    break;
+                case MatrixOperations.determinant:
+                    break;
+                case MatrixOperations.inverse:
+                    break;
+                case MatrixOperations.transpose:
+                    break;
+                default:
+                    break;
             }
         }
     }
