@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using ControlzEx.Theming;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace MatrixCalculator
 {
@@ -174,8 +175,19 @@ namespace MatrixCalculator
 
         public void ValidateTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
-            e.Handled = regex.IsMatch(e.Text);
+            bool approvedDecimalPoint = false;
+
+            NumberFormatInfo nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString(), false).NumberFormat;
+
+            if (e.Text == nfi.NumberDecimalSeparator)
+            {
+                //((TextBox)sender).Text = nfi.NumberDecimalSeparator;
+                if (!((TextBox)sender).Text.Contains(nfi.NumberDecimalSeparator))
+                    approvedDecimalPoint = true;
+            }
+
+            if (!(char.IsDigit(e.Text, e.Text.Length - 1) || approvedDecimalPoint))
+                e.Handled = true;
         }
 
     }
