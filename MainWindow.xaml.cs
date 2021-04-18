@@ -170,14 +170,19 @@ namespace MatrixCalculator
 
         private void solve_Click(object sender, RoutedEventArgs e)
         {
-            Matrix.Solve(Operation, a, b);
+            c = Matrix.Solve(Operation, a, b);
+            c.CreateTextBoxMatrix(resultGrid, this);
         }
 
         public void ValidateTextBox(object sender, TextCompositionEventArgs e)
         {
             bool approvedDecimalPoint = false;
+            bool approvedPlusOrMinus = false;
 
             NumberFormatInfo nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString(), false).NumberFormat;
+
+            if ((e.Text == "+" || e.Text == "-") && ((TextBox)sender).Text.Length == 0)
+                approvedDecimalPoint = true;
 
             if (e.Text == nfi.NumberDecimalSeparator)
             {
@@ -185,7 +190,7 @@ namespace MatrixCalculator
                     approvedDecimalPoint = true;
             }
 
-            if (!(char.IsDigit(e.Text, e.Text.Length - 1) || approvedDecimalPoint))
+            if (!(char.IsDigit(e.Text, e.Text.Length - 1) || approvedDecimalPoint || approvedPlusOrMinus))
                 e.Handled = true;
         }
 

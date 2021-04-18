@@ -45,6 +45,14 @@ namespace MatrixCalculator
             NumOfColumns = 3;
         }
 
+        public Matrix(Roles role, double[,] data)
+        {
+            this.Role = role;
+            this.MatrixData = data;
+            NumOfRows = data.GetLength(0);
+            NumOfColumns = data.GetLength(1);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -99,6 +107,8 @@ namespace MatrixCalculator
                 for (int j = 0; j < NumOfColumns; j++)
                 {
                     TextBoxMatrix[i, j] = CreateATextBox(grid, i + iPlus, j + jPlus, window);
+                    if (this.Role == Roles.Result)
+                        TextBoxMatrix[i, j].Text = MatrixData[i, j].ToString();
                 }
             }
 
@@ -134,27 +144,72 @@ namespace MatrixCalculator
             }
         }
 
-        //Bude vracet objekt Matrix
-        public static void Solve(MatrixOperations operation, Matrix a, Matrix b)
+        public static Matrix Solve(MatrixOperations operation, Matrix a, Matrix b)
         {
             a.TextBoxArrayToDoubleArray();
             b.TextBoxArrayToDoubleArray();
             switch (operation)
             {
                 case MatrixOperations.add:
-                    break;
+                    return a + b;
                 case MatrixOperations.subtract:
-                    break;
-                case MatrixOperations.multiply:
-                    break;
-                case MatrixOperations.determinant:
-                    break;
-                case MatrixOperations.inverse:
-                    break;
-                case MatrixOperations.transpose:
-                    break;
+                    return a - b;
+                //case MatrixOperations.multiply:
+                //    break;
+                //case MatrixOperations.determinant:
+                //    break;
+                //case MatrixOperations.inverse:
+                //    break;
+                //case MatrixOperations.transpose:
+                //    break;
                 default:
-                    break;
+                    throw new Exception("Neznama operace");
+            }
+        }
+
+        public static Matrix operator +(Matrix a, Matrix b)
+        {
+            double[,] addedMatrix;
+
+            if (a.MatrixData.GetLength(0) == b.MatrixData.GetLength(0) && a.MatrixData.GetLength(1) == b.MatrixData.GetLength(1))
+            {
+                addedMatrix = new double[a.MatrixData.GetLength(0), a.MatrixData.GetLength(1)];
+
+                for (int width = 0; width < a.MatrixData.GetLength(0); width++)
+                {
+                    for (int height = 0; height < a.MatrixData.GetLength(1); height++)
+                    {
+                        addedMatrix[width, height] = a.MatrixData[width, height] + b.MatrixData[width, height];
+                    }
+                }
+                return new Matrix(Roles.Result, addedMatrix);
+            }
+            else
+            {
+                throw new Exception("Matice nemaji stejny rozmer!");
+            }
+        }
+
+        public static Matrix operator -(Matrix a, Matrix b)
+        {
+            double[,] substractedMatrix;
+
+            if (a.MatrixData.GetLength(0) == b.MatrixData.GetLength(0) && a.MatrixData.GetLength(1) == b.MatrixData.GetLength(1))
+            {
+                substractedMatrix = new double[a.MatrixData.GetLength(0), a.MatrixData.GetLength(1)];
+
+                for (int width = 0; width < a.MatrixData.GetLength(0); width++)
+                {
+                    for (int height = 0; height < a.MatrixData.GetLength(1); height++)
+                    {
+                        substractedMatrix[width, height] = a.MatrixData[width, height] - b.MatrixData[width, height];
+                    }
+                }
+                return new Matrix(Roles.Result, substractedMatrix);
+            }
+            else
+            {
+                throw new Exception("Matice nemaji stejny rozmer!");
             }
         }
     }
