@@ -181,7 +181,6 @@ namespace MatrixCalculator
 
             if (e.Text == nfi.NumberDecimalSeparator)
             {
-                //((TextBox)sender).Text = nfi.NumberDecimalSeparator;
                 if (!((TextBox)sender).Text.Contains(nfi.NumberDecimalSeparator))
                     approvedDecimalPoint = true;
             }

@@ -58,7 +58,6 @@ namespace MatrixCalculator
             grid.Children.Add(txtb);
             Grid.SetRow(txtb, row);
             Grid.SetColumn(txtb, col);
-            //txtb.AddHandler(TextBox.PreviewTextInputEvent, validator);
             txtb.PreviewTextInput += new System.Windows.Input.TextCompositionEventHandler(window.ValidateTextBox);
             return txtb;
         }
