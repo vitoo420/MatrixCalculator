@@ -144,6 +144,8 @@ namespace MatrixCalculator
             }
         }
 
+       
+
         public static Matrix Solve(MatrixOperations operation, Matrix a, Matrix b)
         {
             a.TextBoxArrayToDoubleArray();
@@ -154,14 +156,20 @@ namespace MatrixCalculator
                     return a + b;
                 case MatrixOperations.subtract:
                     return a - b;
-                //case MatrixOperations.multiply:
-                //    break;
-                //case MatrixOperations.determinant:
-                //    break;
-                //case MatrixOperations.inverse:
-                //    break;
-                //case MatrixOperations.transpose:
-                //    break;
+                case MatrixOperations.multiply:
+                    return a * b;
+                case MatrixOperations.multiplyByNumber:
+                    return a * b.MatrixData[0,0];
+                case MatrixOperations.division:
+                    return a / b;
+                case MatrixOperations.determinant:
+                    double[,] determinant = new double[1, 1];
+                    determinant[0, 0] = Determinant(a.MatrixData);
+                    return new Matrix(Roles.Result, determinant);
+                case MatrixOperations.inverse:
+                    return Invert(a);
+                case MatrixOperations.transpose:
+                    return Transpose(a);
                 default:
                     throw new Exception("Neznama operace");
             }
@@ -211,6 +219,303 @@ namespace MatrixCalculator
             {
                 throw new Exception("Matice nemaji stejny rozmer!");
             }
+        }
+
+        public static Matrix operator /(Matrix a, Matrix b) //násobení matice maticí
+        {
+            Matrix pom = Invert(a);
+            return pom * b;  
+        }
+
+        public static Matrix operator *(Matrix a, Matrix b) //násobení matice maticí
+        {
+            double[,] c;
+
+            if (a.MatrixData.GetLength(1)==b.MatrixData.GetLength(0))
+            {
+                c = new double[b.MatrixData.GetLength(0), b.MatrixData.GetLength(1)];
+                for (int i = 0; i < a.MatrixData.GetLength(0); i++)
+                {
+                    for (int j = 0; j < b.MatrixData.GetLength(1); j++)
+                    {
+                        for (int k = 0; k < a.MatrixData.GetLength(1); k++)
+                        {
+                            c[i, j] += a.MatrixData[i, k] * b.MatrixData[k, j];
+                        }
+                    }
+                }
+                return new Matrix(Roles.Result, c);
+
+            }
+            else
+            {
+                throw new Exception("Matice maji nespravny rozmer.");
+            }
+            
+            
+        }
+
+        public static Matrix operator *(Matrix a, double b)
+        {
+            double[,] c = new double[a.MatrixData.GetLength(0), a.MatrixData.GetLength(1)];
+            try
+            {
+
+                for (int i = 0; i < a.MatrixData.GetLength(0); i++)
+                {
+                    for (int j = 0; j < a.MatrixData.GetLength(1); j++)
+                    {
+                        c[i, j] = a.MatrixData[i, j] * b;
+                    }
+                }
+            }
+            catch (Exception e) { Console.WriteLine("{0} Error", e); }
+            return new Matrix(Roles.Result,c);
+        }
+
+        //Inverzní matice
+        public static Matrix Invert(Matrix matrix)
+        {
+            double[,] d = new double[matrix.MatrixData.GetLength(0), matrix.MatrixData.GetLength(1)];
+
+            for (int i = 0; i < d.GetLength(0); i++)
+            {
+                for (int j = 0; j < d.GetLength(1); j++)
+                {
+                    d[i,j]= MinusOneOrPlusOne(i+j)*Determinant(matrix.SubMatrix(i, j));
+                }
+            }
+
+            return new Matrix(Roles.Result, (Transpose(d) * (1 / Determinant(matrix.MatrixData))).MatrixData);
+        }
+
+        public static double MinusOneOrPlusOne(int x)
+        {
+            if (x % 2 != 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+        public double[,] SubMatrix(int radek, int sloupec)
+        {
+            double[,] pom = new double[MatrixData.GetLength(0) - 1, MatrixData.GetLength(1) - 1];
+            int indexI = 0;
+
+            for (int i = 0; i < MatrixData.GetLength(0); i++)
+            {
+                if (i != radek)
+                {
+                    int indexJ = 0;
+                    for (int j = 0; j < MatrixData.GetLength(1); j++)
+                    {
+                        if (j != sloupec)
+                        {
+                            pom[indexI, indexJ] = MatrixData[i, j];
+                            indexJ++;
+                        }
+                    }
+                    indexI++;
+                }
+                  
+            }
+
+            return pom;
+        }
+
+        //Transponovaná matice
+        public static Matrix Transpose(Matrix m)
+        {
+            return Transpose(m.MatrixData);
+        }
+
+        public static Matrix Transpose(double[,] matrix)
+        {
+            double[,] c = new double[matrix.GetLength(1),matrix.GetLength(0)];
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    c[j, i] = matrix[i, j];
+                }
+            }
+            return new Matrix(Roles.Result, c);
+        }
+
+        //Determinant
+        //Liebnizovo pravidlo
+        public static double Determinant(Matrix m)
+        {
+            return Determinant(m.MatrixData);
+        }
+        public static double Determinant(double[,] submatrix)
+        {
+            double d = 0;
+            //matice 5x5 
+            if (submatrix.GetLength(0) == 5 && submatrix.GetLength(1) == 5)
+            {
+                d = (submatrix[0, 4] * submatrix[1, 3] * submatrix[2, 2] * submatrix[3, 1] -
+                    submatrix[0, 3] * submatrix[1, 4] * submatrix[2, 2] * submatrix[3, 1] -
+                    submatrix[0, 4] * submatrix[1, 2] * submatrix[2, 3] * submatrix[3, 1] +
+                    submatrix[0, 2] * submatrix[1, 4] * submatrix[2, 3] * submatrix[3, 1] +
+                    submatrix[0, 3] * submatrix[1, 2] * submatrix[2, 4] * submatrix[3, 1] -
+                    submatrix[0, 2] * submatrix[1, 3] * submatrix[2, 4] * submatrix[3, 1] -
+                    submatrix[0, 4] * submatrix[1, 3] * submatrix[2, 1] * submatrix[3, 2] +
+                    submatrix[0, 3] * submatrix[1, 4] * submatrix[2, 1] * submatrix[3, 2] +
+                    submatrix[0, 4] * submatrix[1, 1] * submatrix[2, 3] * submatrix[3, 2] -
+                    submatrix[0, 1] * submatrix[1, 4] * submatrix[2, 3] * submatrix[3, 2] -
+                    submatrix[0, 3] * submatrix[1, 1] * submatrix[2, 4] * submatrix[3, 2] +
+                    submatrix[0, 1] * submatrix[1, 3] * submatrix[2, 4] * submatrix[3, 2] +
+                    submatrix[0, 4] * submatrix[1, 2] * submatrix[2, 1] * submatrix[3, 3] -
+                    submatrix[0, 2] * submatrix[1, 4] * submatrix[2, 1] * submatrix[3, 3] -
+                    submatrix[0, 4] * submatrix[1, 1] * submatrix[2, 2] * submatrix[3, 3] +
+                    submatrix[0, 1] * submatrix[1, 4] * submatrix[2, 2] * submatrix[3, 3] +
+                    submatrix[0, 2] * submatrix[1, 1] * submatrix[2, 4] * submatrix[3, 3] -
+                    submatrix[0, 1] * submatrix[1, 2] * submatrix[2, 4] * submatrix[3, 3] -
+                    submatrix[0, 3] * submatrix[1, 2] * submatrix[2, 1] * submatrix[3, 4] +
+                    submatrix[0, 2] * submatrix[1, 3] * submatrix[2, 1] * submatrix[3, 4] +
+                    submatrix[0, 3] * submatrix[1, 1] * submatrix[2, 2] * submatrix[3, 4] -
+                    submatrix[0, 1] * submatrix[1, 3] * submatrix[2, 2] * submatrix[3, 4] -
+                    submatrix[0, 2] * submatrix[1, 1] * submatrix[2, 3] * submatrix[3, 4] +
+                    submatrix[0, 1] * submatrix[1, 2] * submatrix[2, 3] * submatrix[3, 4]) * submatrix[4, 0] -
+                    (submatrix[0, 4] * submatrix[1, 3] * submatrix[2, 2] * submatrix[3, 0] -
+                    submatrix[0, 3] * submatrix[1, 4] * submatrix[2, 2] * submatrix[3, 0] -
+                    submatrix[0, 4] * submatrix[1, 2] * submatrix[2, 3] * submatrix[3, 0] +
+                    submatrix[0, 2] * submatrix[1, 4] * submatrix[2, 3] * submatrix[3, 0] +
+                    submatrix[0, 3] * submatrix[1, 2] * submatrix[2, 4] * submatrix[3, 0] -
+                    submatrix[0, 2] * submatrix[1, 3] * submatrix[2, 4] * submatrix[3, 0] -
+                    submatrix[0, 4] * submatrix[1, 3] * submatrix[2, 0] * submatrix[3, 2] +
+                    submatrix[0, 3] * submatrix[1, 4] * submatrix[2, 0] * submatrix[3, 2] +
+                    submatrix[0, 4] * submatrix[1, 0] * submatrix[2, 3] * submatrix[3, 2] -
+                    submatrix[0, 0] * submatrix[1, 4] * submatrix[2, 3] * submatrix[3, 2] -
+                    submatrix[0, 3] * submatrix[1, 0] * submatrix[2, 4] * submatrix[3, 2] +
+                    submatrix[0, 0] * submatrix[1, 3] * submatrix[2, 4] * submatrix[3, 2] +
+                    submatrix[0, 4] * submatrix[1, 2] * submatrix[2, 0] * submatrix[3, 3] -
+                    submatrix[0, 2] * submatrix[1, 4] * submatrix[2, 0] * submatrix[3, 3] -
+                    submatrix[0, 4] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 3] +
+                    submatrix[0, 0] * submatrix[1, 4] * submatrix[2, 2] * submatrix[3, 3] +
+                    submatrix[0, 2] * submatrix[1, 0] * submatrix[2, 4] * submatrix[3, 3] -
+                    submatrix[0, 0] * submatrix[1, 2] * submatrix[2, 4] * submatrix[3, 3] -
+                    submatrix[0, 3] * submatrix[1, 2] * submatrix[2, 0] * submatrix[3, 4] +
+                    submatrix[0, 2] * submatrix[1, 3] * submatrix[2, 0] * submatrix[3, 4] +
+                    submatrix[0, 3] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 4] -
+                    submatrix[0, 0] * submatrix[1, 3] * submatrix[2, 2] * submatrix[3, 4] -
+                    submatrix[0, 2] * submatrix[1, 0] * submatrix[2, 3] * submatrix[3, 4] +
+                    submatrix[0, 0] * submatrix[1, 2] * submatrix[2, 3] * submatrix[3, 4]) * submatrix[4, 1] +
+                    (submatrix[0, 4] * submatrix[1, 3] * submatrix[2, 1] * submatrix[3, 0] -
+                    submatrix[0, 3] * submatrix[1, 4] * submatrix[2, 1] * submatrix[3, 0] -
+                    submatrix[0, 4] * submatrix[1, 1] * submatrix[2, 3] * submatrix[3, 0] +
+                    submatrix[0, 1] * submatrix[1, 4] * submatrix[2, 3] * submatrix[3, 0] +
+                    submatrix[0, 3] * submatrix[1, 1] * submatrix[2, 4] * submatrix[3, 0] -
+                    submatrix[0, 1] * submatrix[1, 3] * submatrix[2, 4] * submatrix[3, 0] -
+                    submatrix[0, 4] * submatrix[1, 3] * submatrix[2, 0] * submatrix[3, 1] +
+                    submatrix[0, 3] * submatrix[1, 4] * submatrix[2, 0] * submatrix[3, 1] +
+                    submatrix[0, 4] * submatrix[1, 0] * submatrix[2, 3] * submatrix[3, 1] -
+                    submatrix[0, 0] * submatrix[1, 4] * submatrix[2, 3] * submatrix[3, 1] -
+                    submatrix[0, 3] * submatrix[1, 0] * submatrix[2, 4] * submatrix[3, 1] +
+                    submatrix[0, 0] * submatrix[1, 3] * submatrix[2, 4] * submatrix[3, 1] +
+                    submatrix[0, 4] * submatrix[1, 1] * submatrix[2, 0] * submatrix[3, 3] -
+                    submatrix[0, 1] * submatrix[1, 4] * submatrix[2, 0] * submatrix[3, 3] -
+                    submatrix[0, 4] * submatrix[1, 0] * submatrix[2, 1] * submatrix[3, 3] +
+                    submatrix[0, 0] * submatrix[1, 4] * submatrix[2, 1] * submatrix[3, 3] +
+                    submatrix[0, 1] * submatrix[1, 0] * submatrix[2, 4] * submatrix[3, 3] -
+                    submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 4] * submatrix[3, 3] -
+                    submatrix[0, 3] * submatrix[1, 1] * submatrix[2, 0] * submatrix[3, 4] +
+                    submatrix[0, 1] * submatrix[1, 3] * submatrix[2, 0] * submatrix[3, 4] +
+                    submatrix[0, 3] * submatrix[1, 0] * submatrix[2, 1] * submatrix[3, 4] -
+                    submatrix[0, 0] * submatrix[1, 3] * submatrix[2, 1] * submatrix[3, 4] -
+                    submatrix[0, 1] * submatrix[1, 0] * submatrix[2, 3] * submatrix[3, 4] +
+                    submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 3] * submatrix[3, 4]) * submatrix[4, 2] -
+                    (submatrix[0, 4] * submatrix[1, 2] * submatrix[2, 1] * submatrix[3, 0] -
+                    submatrix[0, 2] * submatrix[1, 4] * submatrix[2, 1] * submatrix[3, 0] -
+                    submatrix[0, 4] * submatrix[1, 1] * submatrix[2, 2] * submatrix[3, 0] +
+                    submatrix[0, 1] * submatrix[1, 4] * submatrix[2, 2] * submatrix[3, 0] +
+                    submatrix[0, 2] * submatrix[1, 1] * submatrix[2, 4] * submatrix[3, 0] -
+                    submatrix[0, 1] * submatrix[1, 2] * submatrix[2, 4] * submatrix[3, 0] -
+                    submatrix[0, 4] * submatrix[1, 2] * submatrix[2, 0] * submatrix[3, 1] +
+                    submatrix[0, 2] * submatrix[1, 4] * submatrix[2, 0] * submatrix[3, 1] +
+                    submatrix[0, 4] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 1] -
+                    submatrix[0, 0] * submatrix[1, 4] * submatrix[2, 2] * submatrix[3, 1] -
+                    submatrix[0, 2] * submatrix[1, 0] * submatrix[2, 4] * submatrix[3, 1] +
+                    submatrix[0, 0] * submatrix[1, 2] * submatrix[2, 4] * submatrix[3, 1] +
+                    submatrix[0, 4] * submatrix[1, 1] * submatrix[2, 0] * submatrix[3, 2] -
+                    submatrix[0, 1] * submatrix[1, 4] * submatrix[2, 0] * submatrix[3, 2] -
+                    submatrix[0, 4] * submatrix[1, 0] * submatrix[2, 1] * submatrix[3, 2] +
+                    submatrix[0, 0] * submatrix[1, 4] * submatrix[2, 1] * submatrix[3, 2] +
+                    submatrix[0, 1] * submatrix[1, 0] * submatrix[2, 4] * submatrix[3, 2] -
+                    submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 4] * submatrix[3, 2] -
+                    submatrix[0, 2] * submatrix[1, 1] * submatrix[2, 0] * submatrix[3, 4] +
+                    submatrix[0, 1] * submatrix[1, 2] * submatrix[2, 0] * submatrix[3, 4] +
+                    submatrix[0, 2] * submatrix[1, 0] * submatrix[2, 1] * submatrix[3, 4] -
+                    submatrix[0, 0] * submatrix[1, 2] * submatrix[2, 1] * submatrix[3, 4] -
+                    submatrix[0, 1] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 4] +
+                    submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 2] * submatrix[3, 4]) * submatrix[4, 3] +
+                    (submatrix[0, 3] * submatrix[1, 2] * submatrix[2, 1] * submatrix[3, 0] -
+                    submatrix[0, 2] * submatrix[1, 3] * submatrix[2, 1] * submatrix[3, 0] -
+                    submatrix[0, 3] * submatrix[1, 1] * submatrix[2, 2] * submatrix[3, 0] +
+                    submatrix[0, 1] * submatrix[1, 3] * submatrix[2, 2] * submatrix[3, 0] +
+                    submatrix[0, 2] * submatrix[1, 1] * submatrix[2, 3] * submatrix[3, 0] -
+                    submatrix[0, 1] * submatrix[1, 2] * submatrix[2, 3] * submatrix[3, 0] -
+                    submatrix[0, 3] * submatrix[1, 2] * submatrix[2, 0] * submatrix[3, 1] +
+                    submatrix[0, 2] * submatrix[1, 3] * submatrix[2, 0] * submatrix[3, 1] +
+                    submatrix[0, 3] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 1] -
+                    submatrix[0, 0] * submatrix[1, 3] * submatrix[2, 2] * submatrix[3, 1] -
+                    submatrix[0, 2] * submatrix[1, 0] * submatrix[2, 3] * submatrix[3, 1] +
+                    submatrix[0, 0] * submatrix[1, 2] * submatrix[2, 3] * submatrix[3, 1] +
+                    submatrix[0, 3] * submatrix[1, 1] * submatrix[2, 0] * submatrix[3, 2] -
+                    submatrix[0, 1] * submatrix[1, 3] * submatrix[2, 0] * submatrix[3, 2] -
+                    submatrix[0, 3] * submatrix[1, 0] * submatrix[2, 1] * submatrix[3, 2] +
+                    submatrix[0, 0] * submatrix[1, 3] * submatrix[2, 1] * submatrix[3, 2] +
+                    submatrix[0, 1] * submatrix[1, 0] * submatrix[2, 3] * submatrix[3, 2] -
+                    submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 3] * submatrix[3, 2] -
+                    submatrix[0, 2] * submatrix[1, 1] * submatrix[2, 0] * submatrix[3, 3] +
+                    submatrix[0, 1] * submatrix[1, 2] * submatrix[2, 0] * submatrix[3, 3] +
+                    submatrix[0, 2] * submatrix[1, 0] * submatrix[2, 1] * submatrix[3, 3] -
+                    submatrix[0, 0] * submatrix[1, 2] * submatrix[2, 1] * submatrix[3, 3] -
+                    submatrix[0, 1] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 3] +
+                    submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 2] * submatrix[3, 3]) * submatrix[4, 4];
+                return d;
+            }
+            //matice 4x4
+            else if (submatrix.GetLength(0) == 4 && submatrix.GetLength(1) == 4)
+            {
+                d = (submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 2] * submatrix[3, 3]) - (submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 3] * submatrix[3, 2]) - (submatrix[0, 0] * submatrix[1, 2] * submatrix[2, 1] * submatrix[3, 3])
+                    + (submatrix[0, 0] * submatrix[1, 2] * submatrix[2, 3] * submatrix[3, 1]) + (submatrix[0, 0] * submatrix[1, 3] * submatrix[2, 1] * submatrix[3, 2]) - (submatrix[0, 0] * submatrix[1, 3] * submatrix[2, 2] * submatrix[3, 1])
+                    - (submatrix[0, 1] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 3]) + (submatrix[0, 1] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 3]) + (submatrix[0, 1] * submatrix[1, 2] * submatrix[2, 0] * submatrix[3, 3])
+                    - (submatrix[0, 1] * submatrix[1, 2] * submatrix[2, 3] * submatrix[3, 0]) - (submatrix[0, 1] * submatrix[1, 3] * submatrix[2, 0] * submatrix[3, 2]) + (submatrix[0, 1] * submatrix[1, 3] * submatrix[2, 2] * submatrix[3, 0])
+                    + (submatrix[0, 2] * submatrix[1, 0] * submatrix[2, 1] * submatrix[3, 3]) - (submatrix[0, 2] * submatrix[1, 0] * submatrix[2, 3] * submatrix[3, 1]) - (submatrix[0, 2] * submatrix[1, 1] * submatrix[2, 0] * submatrix[3, 3])
+                    + (submatrix[0, 2] * submatrix[1, 1] * submatrix[2, 3] * submatrix[3, 0]) + (submatrix[0, 2] * submatrix[1, 3] * submatrix[2, 0] * submatrix[3, 1]) - (submatrix[0, 2] * submatrix[1, 3] * submatrix[2, 1] * submatrix[3, 0])
+                    - (submatrix[0, 3] * submatrix[1, 0] * submatrix[2, 1] * submatrix[3, 2]) + (submatrix[0, 3] * submatrix[1, 0] * submatrix[2, 2] * submatrix[3, 1]) + (submatrix[0, 3] * submatrix[1, 1] * submatrix[2, 0] * submatrix[3, 2])
+                    - (submatrix[0, 3] * submatrix[1, 1] * submatrix[2, 2] * submatrix[3, 0]) - (submatrix[0, 3] * submatrix[1, 2] * submatrix[2, 0] * submatrix[3, 1]) + (submatrix[0, 3] * submatrix[1, 2] * submatrix[2, 1] * submatrix[3, 0]);
+                return d;
+            }   
+            //matice 3x3
+            else if (submatrix.GetLength(0) == 3 && submatrix.GetLength(1) == 3)
+            {
+                d = (submatrix[0, 0] * submatrix[1, 1] * submatrix[2, 2]) + (submatrix[1, 0] * submatrix[2, 1] * submatrix[0, 2]) + (submatrix[2, 0] * submatrix[0, 1] * submatrix[1, 2]) - (submatrix[1, 0] * submatrix[0, 1] * submatrix[2, 2])
+                    - (submatrix[0, 0] * submatrix[2, 1] * submatrix[1, 2]) - (submatrix[2, 0] * submatrix[1, 1] * submatrix[0, 2]);
+                return d;
+            }
+            //matice 2x2
+            else if (submatrix.GetLength(0) == 2 && submatrix.GetLength(1) == 2)
+            {
+                d = (submatrix[0, 0] * submatrix[1, 1]) - (submatrix[1, 0] * submatrix[0, 1]);
+                return d;
+            }
+            else if (submatrix.GetLength(0) ==1 && submatrix.GetLength(1) == 1)
+            {
+                d = (submatrix[0, 0]);
+                return d;
+            }
+            else
+            {
+                throw new Exception("Nelze spocitat determinant matice.");
+            }
+
         }
     }
 

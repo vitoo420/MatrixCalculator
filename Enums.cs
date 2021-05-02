@@ -13,6 +13,6 @@ namespace MatrixCalculator
 
     enum MatrixOperations    
     {
-        add, subtract, multiply, determinant, inverse, transpose
+        add, subtract, multiply, division, determinant, inverse, transpose, multiplyByNumber
     }
 }

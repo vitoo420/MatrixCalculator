@@ -170,6 +170,8 @@
             <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" x:Name="add" IsChecked="True">+</RadioButton>
             <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" x:Name="subtract">-</RadioButton>
             <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" x:Name="multiply">*</RadioButton>
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" x:Name="division">/</RadioButton>
+            <RadioButton GroupName="operations" Margin="10" Checked="OperationChanged" x:Name="multiplyByNumber">n*</RadioButton>
         </StackPanel>
 
         <Button 
