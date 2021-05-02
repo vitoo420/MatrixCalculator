@@ -37,6 +37,10 @@ namespace MatrixCalculator
         public double[,] MatrixData { get; set; }
         public Roles Role { get; set; }
 
+        public Matrix()
+        {
+
+        }
 
         public Matrix(Roles role)
         {

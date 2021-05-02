@@ -100,7 +100,6 @@
             </Grid.RowDefinitions>
         </Grid>
 
-
         <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
 
             <RadioButton VerticalAlignment="Bottom" Margin="0,0,10,10" GroupName="operations" x:Name="transpose" Checked="OperationChanged">tran</RadioButton>
@@ -180,8 +179,59 @@
             Width="50" 
             FontSize="30"
             x:Name="solve"
-            Click="solve_Click">=</Button>
+            Click="solve_Click">=
+        </Button>
+        
+        <StackPanel 
+            Grid.Row="0" 
+            Grid.Column="5"
+            Orientation="Horizontal">
+            <Button 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom" 
+                Width="50" 
+                FontSize="15"
+                x:Name="m1"
+                Click="MemoryClick">M1
+            </Button>
 
+            <Button 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom" 
+                Width="50" 
+                FontSize="15"
+                x:Name="m2"
+                Click="MemoryClick">M2
+            </Button>
+
+            <Button 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom" 
+                Width="50" 
+                FontSize="15"
+                x:Name="m3"
+                Click="MemoryClick">M3
+            </Button>
+
+            <Button 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom" 
+                Width="50" 
+                FontSize="15"
+                x:Name="m4"
+                Click="MemoryClick">M4
+            </Button>
+
+            <Button 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom" 
+                Width="50" 
+                FontSize="15"
+                x:Name="m5"
+                Click="MemoryClick">M5
+            </Button>
+        </StackPanel>
+        
         <mah:ToggleSwitch 
             Grid.Column="5"
             Grid.Row="0"
@@ -189,7 +239,44 @@
             Toggled="ToggleSwitch_Toggled" 
             HorizontalAlignment="Right" 
             VerticalAlignment="Top"  
-            />
+        />
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+            <Label Margin="200,20,0,0">to</Label>
+            <ComboBox Width="50" Height="20" Margin="10,0,20,90" x:Name="to">
+                <ComboBoxItem IsSelected="True">A</ComboBoxItem>
+                <ComboBoxItem>B</ComboBoxItem>
+            </ComboBox>
+            <Label Margin="0,20,0,0">from</Label>
+            <ComboBox Width="50" Height="20" Margin="10,0,20,90" x:Name="from">
+                <ComboBoxItem IsSelected="True">M1</ComboBoxItem>
+                <ComboBoxItem>M2</ComboBoxItem>
+                <ComboBoxItem>M3</ComboBoxItem>
+                <ComboBoxItem>M4</ComboBoxItem>
+                <ComboBoxItem>M5</ComboBoxItem>
+            </ComboBox>
+            <Button Width="100" Height="50" Margin="0,0,0,90" Click="InsertFromMemory">Insert</Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Orientation="Horizontal">
+            <Label Margin="315,80,0,50">to</Label>
+            <ComboBox Width="50" Height="20" Margin="10,30,20,0" x:Name="toCsvCombo">
+                <ComboBoxItem IsSelected="True">A</ComboBoxItem>
+                <ComboBoxItem>B</ComboBoxItem>
+            </ComboBox>
+            <Button Width="100" Height="50" Margin="0,30,0,0" x:Name="importCsvButton" Click="importCsvButton_Click">Import CSV</Button>
+        </StackPanel>
+
+        <Button 
+            Grid.Row="2" 
+            Grid.Column="5"
+            x:Name="ExpCSVButton"
+            Content="Export CSV"
+            Click="ExpCSVButton_Click"
+            Height="50"
+            Width="100"
+            Margin="0,0,0,90"
+        />
 
     </Grid>
 

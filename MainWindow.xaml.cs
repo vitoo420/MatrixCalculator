@@ -17,6 +17,7 @@ using MahApps.Metro.Controls;
 using ControlzEx.Theming;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.IO;
 
 namespace MatrixCalculator
 {
@@ -29,16 +30,12 @@ namespace MatrixCalculator
         private Matrix b = new Matrix(Roles.Second);
         private Matrix c;
         private MatrixOperations Operation;
-        
-        
+        Matrix[] memory = new Matrix[5];
+
+
         public MainWindow()
         {
             InitializeComponent();
-
-            //this.mainGrid.ShowGridLines = true;
-            //this.m1Grid.ShowGridLines = true;
-            //this.m2Grid.ShowGridLines = true;
-
         }
 
         private void OperationChanged(object sender, RoutedEventArgs e)
@@ -194,5 +191,181 @@ namespace MatrixCalculator
                 e.Handled = true;
         }
 
+        private void MemoryClick(object sender, RoutedEventArgs e)
+        {
+            string name = (sender as Button).Name;
+            if (c != null)
+            {
+                switch (name)
+                {
+                    case "m1":
+                        memory[0] = c;
+                        break;
+                    case "m2":
+                        memory[1] = c;
+                        break;
+                    case "m3":
+                        memory[2] = c;
+                        break;
+                    case "m4":
+                        memory[3] = c;
+                        break;
+                    case "m5":
+                        memory[4] = c;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void InsertFromMemory(object sender, RoutedEventArgs e)
+        {
+            string memSel = ((ComboBoxItem)from.SelectedItem).Content.ToString();
+            string matSel = ((ComboBoxItem)to.SelectedItem).Content.ToString();
+            Matrix memTemp = new Matrix();
+
+            switch (memSel)
+            {
+                case "M1":
+                    memTemp = memory[0];
+                    break;
+                case "M2":
+                    memTemp = memory[1];
+                    break;
+                case "M3":
+                    memTemp = memory[2];
+                    break;
+                case "M4":
+                    memTemp = memory[3];
+                    break;
+                case "M5":
+                    memTemp = memory[4];
+                    break;
+            }
+
+
+            if (matSel == "A")
+            {
+                if (a.TextBoxMatrix != null)
+                    Matrix.DeleteMatrix(a, m1Grid);
+                a = memTemp;
+                a.Role = Roles.First;
+                a.CreateTextBoxMatrix(m1Grid, this);
+                for (int i = 0; i < a.NumOfRows; i++)
+                {
+                    for (int j = 0; j < a.NumOfColumns; j++)
+                    {
+                        a.TextBoxMatrix[i, j].Text = a.MatrixData[i, j].ToString();
+                    }
+                }
+            }
+            else
+            {
+                if (b.TextBoxMatrix != null)
+                    Matrix.DeleteMatrix(b, m2Grid);
+                b = memTemp;
+                b.Role = Roles.Second;
+                b.CreateTextBoxMatrix(m2Grid, this);
+                for (int i = 0; i < b.NumOfRows; i++)
+                {
+                    for (int j = 0; j < b.NumOfColumns; j++)
+                    {
+                        b.TextBoxMatrix[i, j].Text = b.MatrixData[i, j].ToString();
+                    }
+                }
+            }
+        }
+
+        private void ExpCSVButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (c != null)
+            {
+                using (var writer = new StreamWriter("file.csv"))
+                {
+                    string[] values = new string[c.NumOfColumns];
+
+                    for (int i = 0; i < c.NumOfRows; i++)
+                    {
+                        for (int j = 0; j < c.NumOfColumns; j++)
+                        {
+                            values[j] = c.MatrixData[i, j].ToString();
+                        }
+                        string row = String.Join(";", values);
+                        writer.WriteLine(row);
+                    }
+                }
+            }
+        }
+
+        private void importCsvButton_Click(object sender, RoutedEventArgs e)
+        {
+            string[] rowData = new string[5];
+            string s;
+            double[,] data;
+            
+
+            using (var reader = new StreamReader("file.csv"))
+            {
+                int i = 0;
+
+                while ((s = reader.ReadLine()) != null)
+                {
+                    rowData[i] = s;
+                        //= s.Split(';');
+
+                    //string jmeno = rozdeleno[0];
+                    i++;
+                }
+            }
+
+            int rowNum = rowData.Count(x => x != null);
+            int colNum = rowData[0].Count(x => x == ';') + 1;
+
+            data = new double[rowNum, colNum];
+
+            for (int i = 0; i < rowNum; i++)
+            {
+                string[] separ = rowData[i].Split(';');
+
+                for (int j = 0; j < colNum; j++)
+                {
+                    data[i, j] = Convert.ToDouble(separ[j]);
+                }
+            }
+
+            if (((ComboBoxItem)(toCsvCombo.SelectedItem)).Content.ToString() == "A")
+            {
+                a.MatrixData = data;
+                m1NumOfColInput.Value = colNum;
+                m1NumOfRowInput.Value = rowNum;
+                if (a.TextBoxMatrix != null)
+                    Matrix.DeleteMatrix(a, m1Grid);
+                a.CreateTextBoxMatrix(m1Grid, this);
+                for (int i = 0; i < a.NumOfRows; i++)
+                {
+                    for (int j = 0; j < a.NumOfColumns; j++)
+                    {
+                        a.TextBoxMatrix[i, j].Text = a.MatrixData[i, j].ToString();
+                    }
+                }
+            }
+            else
+            {
+                b.MatrixData = data;
+                m1NumOfColInput.Value = colNum;
+                m1NumOfRowInput.Value = rowNum;
+                if (b.TextBoxMatrix != null)
+                    Matrix.DeleteMatrix(b, m2Grid);
+                b.CreateTextBoxMatrix(m2Grid, this);
+                for (int i = 0; i < b.NumOfRows; i++)
+                {
+                    for (int j = 0; j < b.NumOfColumns; j++)
+                    {
+                        b.TextBoxMatrix[i, j].Text = b.MatrixData[i, j].ToString();
+                    }
+                }
+            }
+        }
     }
 }
