@@ -58,7 +58,7 @@ namespace MatrixCalculator
         }
 
         /// <summary>
-        /// 
+        /// Vytvoří TextBox v gridu
         /// </summary>
         /// <param name="grid">Sub Grid matice</param>
         /// <param name="row">radek v Sub Gridu</param>
@@ -75,9 +75,10 @@ namespace MatrixCalculator
         }
 
         /// <summary>
-        /// Vytvori pole TextBoxu reprezentujici matici, TextBoxy jsou umisteny do gridu, ktery je urceny pro matici.
+        /// Vytvoří pole TextBoxů reprezentující matici, TextBoxy jsou umístěny do gridu, který je určený pro matici.
         /// </summary>
-        /// <param name="grid">Sub Grid matice</param>
+        /// <param name="grid">Grid matice</param>
+        /// <param name="window">Instance okna pro možnost přidání validace TB</param>
         public void CreateTextBoxMatrix(Grid grid, MatrixCalculator.MainWindow window)
         {
             int iPlus = 0;                                  //Nastaveni pozicovacich promennych 
@@ -112,12 +113,20 @@ namespace MatrixCalculator
                 {
                     TextBoxMatrix[i, j] = CreateATextBox(grid, i + iPlus, j + jPlus, window);
                     if (this.Role == Roles.Result)
+                    { 
                         TextBoxMatrix[i, j].Text = MatrixData[i, j].ToString();
+                        TextBoxMatrix[i, j].IsReadOnly = true;
+                    }
                 }
             }
 
         }
 
+        /// <summary>
+        /// Zakáže či povolí zapisovat do TB
+        /// </summary>
+        /// <param name="grid">Grid matice</param>
+        /// <param name="isEnabled">true - povolit, false - zakázat</param>
         public void TextBoxMatrixIsEnabled(Grid grid, bool isEnabled)
         {
             bool _isEnabled = isEnabled;
@@ -127,6 +136,11 @@ namespace MatrixCalculator
             }
         }
 
+        /// <summary>
+        /// Odstraní TextBoxové pole
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="grid"></param>
         public static void DeleteMatrix(Matrix matrix, Grid grid)
         {
             foreach (var item in matrix.TextBoxMatrix)
@@ -135,6 +149,9 @@ namespace MatrixCalculator
             }
         }
 
+        /// <summary>
+        /// Překopíruje data z textboxu do pole double
+        /// </summary>
         private void TextBoxArrayToDoubleArray()
         {
             this.MatrixData = new double[NumOfRows, NumOfColumns];
@@ -149,7 +166,13 @@ namespace MatrixCalculator
         }
 
        
-
+        /// <summary>
+        /// Provádí výpočty
+        /// </summary>
+        /// <param name="operation">Vybraná operace</param>
+        /// <param name="a">matice</param>
+        /// <param name="b">matice</param>
+        /// <returns>Výsledná matice</returns>
         public static Matrix Solve(MatrixOperations operation, Matrix a, Matrix b)
         {
             a.TextBoxArrayToDoubleArray();
@@ -225,7 +248,7 @@ namespace MatrixCalculator
             }
         }
 
-        public static Matrix operator /(Matrix a, Matrix b) //násobení matice maticí
+        public static Matrix operator /(Matrix a, Matrix b) //dělení matice maticí
         {
             Matrix pom = Invert(a);
             return pom * b;  

@@ -194,6 +194,7 @@
                 Width="50" 
                 FontSize="15"
                 x:Name="m1"
+                Margin="0,0,5,0"
                 Click="MemoryClick">M1
             </Button>
 
@@ -203,6 +204,7 @@
                 Width="50" 
                 FontSize="15"
                 x:Name="m2"
+                Margin="0,0,5,0"
                 Click="MemoryClick">M2
             </Button>
 
@@ -212,6 +214,7 @@
                 Width="50" 
                 FontSize="15"
                 x:Name="m3"
+                Margin="0,0,5,0"
                 Click="MemoryClick">M3
             </Button>
 
@@ -221,6 +224,7 @@
                 Width="50" 
                 FontSize="15"
                 x:Name="m4"
+                Margin="0,0,5,0"
                 Click="MemoryClick">M4
             </Button>
 
@@ -279,7 +283,6 @@
             Width="100"
             Margin="0,0,0,90"
         />
-
     </Grid>
 
 </mah:MetroWindow>

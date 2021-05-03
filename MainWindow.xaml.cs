@@ -191,6 +191,8 @@ namespace MatrixCalculator
 
         private void solve_Click(object sender, RoutedEventArgs e)
         {
+            if (c != null)
+                Matrix.DeleteMatrix(c, resultGrid);
             c = Matrix.Solve(Operation, a, b);
             c.CreateTextBoxMatrix(resultGrid, this);
         }
@@ -199,10 +201,9 @@ namespace MatrixCalculator
         {
             bool approvedDecimalPoint = false;
             bool approvedPlusOrMinus = false;
-
             NumberFormatInfo nfi = new CultureInfo(CultureInfo.CurrentCulture.ToString(), false).NumberFormat;
 
-            if ((e.Text == "+" || e.Text == "-") && ((TextBox)sender).Text.Length == 0)
+            if ((e.Text == "+" || e.Text == "-") && ((TextBox)sender).CaretIndex == 0 && !((TextBox)sender).Text.Contains("+") && !((TextBox)sender).Text.Contains("-"))
                 approvedDecimalPoint = true;
 
             if (e.Text == nfi.NumberDecimalSeparator)
@@ -268,34 +269,36 @@ namespace MatrixCalculator
                     break;
             }
 
-
-            if (matSel == "A")
+            if (memTemp != null)
             {
-                if (a.TextBoxMatrix != null)
-                    Matrix.DeleteMatrix(a, m1Grid);
-                a = memTemp;
-                a.Role = Roles.First;
-                a.CreateTextBoxMatrix(m1Grid, this);
-                for (int i = 0; i < a.NumOfRows; i++)
+                if (matSel == "A")
                 {
-                    for (int j = 0; j < a.NumOfColumns; j++)
+                    if (a.TextBoxMatrix != null)
+                        Matrix.DeleteMatrix(a, m1Grid);
+                    a = memTemp;
+                    a.Role = Roles.First;
+                    a.CreateTextBoxMatrix(m1Grid, this);
+                    for (int i = 0; i < a.NumOfRows; i++)
                     {
-                        a.TextBoxMatrix[i, j].Text = a.MatrixData[i, j].ToString();
+                        for (int j = 0; j < a.NumOfColumns; j++)
+                        {
+                            a.TextBoxMatrix[i, j].Text = a.MatrixData[i, j].ToString();
+                        }
                     }
                 }
-            }
-            else
-            {
-                if (b.TextBoxMatrix != null)
-                    Matrix.DeleteMatrix(b, m2Grid);
-                b = memTemp;
-                b.Role = Roles.Second;
-                b.CreateTextBoxMatrix(m2Grid, this);
-                for (int i = 0; i < b.NumOfRows; i++)
+                else
                 {
-                    for (int j = 0; j < b.NumOfColumns; j++)
+                    if (b.TextBoxMatrix != null)
+                        Matrix.DeleteMatrix(b, m2Grid);
+                    b = memTemp;
+                    b.Role = Roles.Second;
+                    b.CreateTextBoxMatrix(m2Grid, this);
+                    for (int i = 0; i < b.NumOfRows; i++)
                     {
-                        b.TextBoxMatrix[i, j].Text = b.MatrixData[i, j].ToString();
+                        for (int j = 0; j < b.NumOfColumns; j++)
+                        {
+                            b.TextBoxMatrix[i, j].Text = b.MatrixData[i, j].ToString();
+                        }
                     }
                 }
             }
@@ -327,7 +330,7 @@ namespace MatrixCalculator
             string[] rowData = new string[5];
             string s;
             double[,] data;
-            
+
 
             using (var reader = new StreamReader("file.csv"))
             {
@@ -336,9 +339,6 @@ namespace MatrixCalculator
                 while ((s = reader.ReadLine()) != null)
                 {
                     rowData[i] = s;
-                        //= s.Split(';');
-
-                    //string jmeno = rozdeleno[0];
                     i++;
                 }
             }
