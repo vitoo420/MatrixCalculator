@@ -260,7 +260,7 @@ namespace MatrixCalculator
 
             if (a.MatrixData.GetLength(1)==b.MatrixData.GetLength(0))
             {
-                c = new double[b.MatrixData.GetLength(0), b.MatrixData.GetLength(1)];
+                c = new double[a.MatrixData.GetLength(0), b.MatrixData.GetLength(1)];
                 for (int i = 0; i < a.MatrixData.GetLength(0); i++)
                 {
                     for (int j = 0; j < b.MatrixData.GetLength(1); j++)
